@@ -1,0 +1,13 @@
+FROM golang:1-alpine as build
+
+WORKDIR /app
+COPY webserver.go .
+RUN go build webserver.go
+
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=build /app/webserver /app/webserver
+
+EXPOSE 8080
+ENTRYPOINT [ "/app/webserver" ]
